@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+#__next-build-watcher {
+    display: none !important;
+  }  
