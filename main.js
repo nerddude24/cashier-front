@@ -12,7 +12,7 @@ function createWindow () {
     }
   });
 
-  win.loadURL('http://localhost:3000'); // رابط Next.js
+  win.loadURL('http://localhost:3000'); 
   win.setMenuBarVisibility(false);
 }
 
