@@ -9,12 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "elctron": "^0.0.1-security",
     "motion": "^12.4.7",
-    "next": "15.2.0",
+    "next": "^15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
+
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
@@ -24,12 +24,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
     "tailwindcss": "^4",
-  "typescript": "^5"
-},
-"main": "main.js",
-"scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "electron ."
-}
+    "typescript": "^5"
+  }
 }

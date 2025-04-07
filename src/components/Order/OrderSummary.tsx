@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from "react";
+import Receipt from "./Receipt";
 
 interface OrderProduct {
   id: number;
@@ -13,10 +14,19 @@ interface OrderSummaryProps {
   products: OrderProduct[];
   onRemoveProduct: (id: number) => void;
   onNewOrder?: () => void;
+  currentTime: string;
+  onQuantityChange?: (productId: number, newQuantity: number) => void;
 }
 
-export default function OrderSummary({ products, onRemoveProduct, onNewOrder }: OrderSummaryProps) {
+export default function OrderSummary({
+  products,
+  onRemoveProduct,
+  onNewOrder,
+  currentTime,
+  onQuantityChange,
+}: OrderSummaryProps) {
   const total = products.reduce((sum, product) => sum + product.coast, 0);
+  const [showReceipt, setShowReceipt] = useState(false);
 
   return (
     <div className="w-full h-full flex flex-col border border-[#595959]/45 p-4 relative">
@@ -25,7 +35,7 @@ export default function OrderSummary({ products, onRemoveProduct, onNewOrder }: 
         <div className="text-8xl font-mono">{total.toFixed(2)}</div>
       </div>
       <div className="flex flex-row gap-4">
-        <button className="px-4 py-2 mb-4 border rounded-md border-[#595959]/45 text-[#595959] hover:border-white/50 hover:text-white transition-colors flex items-center justify-center gap-2">
+        {/* <button className="p-2 mb-4 border rounded-md border-[#595959]/45 text-[#595959] hover:border-white/50 hover:text-white transition-colors flex items-center justify-center gap-2">
           <svg
             width="24"
             height="24"
@@ -39,8 +49,11 @@ export default function OrderSummary({ products, onRemoveProduct, onNewOrder }: 
             />
           </svg>
           PAY USING CARD
-        </button>
-        <button className="w-full px-4 py-2 mb-4 border rounded-md border-[#595959]/45 text-[#595959] hover:border-white/50 hover:text-white transition-colors flex items-center justify-center gap-2">
+        </button> */}
+        <button
+          onClick={() => setShowReceipt(true)}
+          className="p-2 w-full mb-4 border rounded-md border-[#595959]/45 text-[#595959] hover:border-white/50 hover:text-white transition-colors flex items-center justify-center gap-2"
+        >
           <svg
             width="24"
             height="24"
@@ -55,11 +68,19 @@ export default function OrderSummary({ products, onRemoveProduct, onNewOrder }: 
           </svg>
           PRINT ORDER
         </button>
+        {showReceipt && (
+          <Receipt
+            products={products}
+            currentTime={currentTime}
+            onClose={() => setShowReceipt(false)}
+            onQuantityChange={onQuantityChange}
+          />
+        )}
       </div>
-      <div className="flex-1 overflow-auto">
-        <div className="grid grid-cols-6 p-2 bg-[#232323] text-sm mb-2 text-left items-center gap-2">
+      <div className="flex-1 overflow-auto mb-12">
+        <div className="grid grid-cols-6 p-2 bg-[#232323] text-sm mb-2 text-left py-2 gap-2">
           <div>N</div>
-          <div>PRODUCT NAME</div>
+          <div className="receipt-table">PRODUCT NAME</div>
           <div>BAR CODE</div>
           <div>UNIT PRICE</div>
           <div>QUANTITY</div>
@@ -68,9 +89,9 @@ export default function OrderSummary({ products, onRemoveProduct, onNewOrder }: 
         {products.map((product, index) => (
           <div
             key={product.id}
-            className="grid grid-cols-6 gap-2 text-white text-sm mb-1 group"
+            className="grid grid-cols-6 items-center text-white text-sm mb-1 group"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center py-1 gap-2">
               <button
                 onClick={() => onRemoveProduct(product.id)}
                 className="opacity-0 group-hover:opacity-100 mr-1 text-red-500 hover:text-red-400 transition-opacity"
@@ -90,10 +111,37 @@ export default function OrderSummary({ products, onRemoveProduct, onNewOrder }: 
               </button>
               {index + 1}
             </div>
-            <div>{product.name}</div>
+            <div className="relative left-[-40px] w-[120px]">
+              {product.name}
+            </div>
             <div>{product.barCode}</div>
             <div>{product.unitPrice}</div>
-            <div>{product.quantity}</div>
+            <div className="flex items-center gap-2">
+              <span>{product.quantity}</span>
+              {onQuantityChange && (
+                <div className="flex flex-col">
+                  <button
+                    onClick={() =>
+                      onQuantityChange(product.id, product.quantity + 1)
+                    }
+                    className="hover:text-blue-500 transition-colors"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    onClick={() =>
+                      onQuantityChange(
+                        product.id,
+                        Math.max(1, product.quantity - 1)
+                      )
+                    }
+                    className="hover:text-blue-500 transition-colors"
+                  >
+                    ▼
+                  </button>
+                </div>
+              )}
+            </div>
             <div>{product.coast}</div>
           </div>
         ))}
@@ -117,7 +165,7 @@ export default function OrderSummary({ products, onRemoveProduct, onNewOrder }: 
       )}
       <button
         onClick={onNewOrder}
-        className="absolute bottom-4 left-4 text-blue-500 hover:text-blue-400 transition-colors flex items-center gap-2"
+        className="absolute bottom-4 left-4 text-blue-500 hover:text-blue-400 transition-colors p-2 border-1 rounded-l border-blue-500 flex items-center gap-2"
       >
         <svg
           width="20"

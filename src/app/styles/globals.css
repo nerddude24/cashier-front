@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
-#__next-build-watcher {
-    display: none !important;
-  }  
+.receipt-table{
+    position: relative;
+    left:-50px;
+    width: 120px;
+}

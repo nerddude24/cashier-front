@@ -5,17 +5,11 @@ import { useState, useEffect } from "react";
 import SearchBar from "@/components/UI/SearchBar";
 import ProductTable from "@/components/UI/ProductTable";
 import OrderSummary from "@/components/Order/OrderSummary";
+import { Product } from "@/types/Product";
 
-interface Product {
-  id: number;
-  name: string;
-  barCode: string;
-  unitPrice: number;
-  quantity: number;
-  coast: number;
-}
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [orderProducts, setOrderProducts] = useState<Product[]>([]);
   const [currentTime, setCurrentTime] = useState<string>("");
 
@@ -34,7 +28,7 @@ export default function Home() {
       setProducts([]);
       return;
     }
-    
+    // simulating product search
     const filteredProducts = [
       {
         id: 1,
@@ -108,10 +102,23 @@ export default function Home() {
     setProducts(filteredProducts);
   };
 
+  const handleProductSelect = (product: Product) => {
+    setSelectedProducts([...selectedProducts, product]);
+    setProducts(products.filter((p) => p.id !== product.id));
+  };
+
+  const handleProductDeselect = (productId: number) => {
+    const deselectedProduct = selectedProducts.find((p) => p.id === productId);
+    if (deselectedProduct) {
+      setProducts([...products, deselectedProduct]);
+      setSelectedProducts(selectedProducts.filter((p) => p.id !== productId));
+    }
+  };
+
   const handleAddToOrder = () => {
-    if (products.length === 0) return;
+    if (selectedProducts.length === 0) return;
     const newOrderProducts = [...orderProducts];
-    products.forEach((product) => {
+    selectedProducts.forEach((product) => {
       const existingProduct = newOrderProducts.find((p) => p.id === product.id);
       if (existingProduct) {
         existingProduct.quantity += 1;
@@ -122,7 +129,7 @@ export default function Home() {
       }
     });
     setOrderProducts(newOrderProducts);
-    setProducts([]);
+    setSelectedProducts([]);
   };
 
   const handleRemoveProduct = (id: number) => {
@@ -138,14 +145,29 @@ export default function Home() {
     setOrderProducts([]);
   };
 
+  const handleQuantityChange = (productId: number, newQuantity: number) => {
+    setOrderProducts(
+      orderProducts.map((product) => {
+        if (product.id === productId) {
+          return {
+            ...product,
+            quantity: newQuantity,
+            coast: newQuantity * product.unitPrice,
+          };
+        }
+        return product;
+      })
+    );
+  };
+
   return (
-    <div className="min-h-screen p-6 flex flex-col bg-[#0C0C0C]">
+    <div className="max-h-screen p-6 flex flex-col bg-[#0C0C0C]">
       <div className="flex justify-between mb-6 items-start">
         <Image
-          src="/MarketCorp.svg"
-          alt="MarketCorp Logo"
-          width={280}
-          height={180}
+          src="/ShoppingCenter.svg"
+          alt="ShoppingCenter Logo"
+          width={260}
+          height={160}
           priority
         />
         <div className="text-right">
@@ -156,10 +178,13 @@ export default function Home() {
       <div className="flex gap-4 flex-1">
         <div className="flex-1 flex flex-col gap-6">
           <SearchBar onSearch={handleSearch} />
-          <div className="flex-1 bg-[#232323] p-4 rounded-lg">
-            <ProductTable products={products} />
-          </div>
-          <div className="flex gap-4">
+          <ProductTable
+            products={products}
+            selectedProducts={selectedProducts}
+            onProductSelect={handleProductSelect}
+            onProductDeselect={handleProductDeselect}
+          />
+          <div className="flex gap-4 mt-4">
             <button
               onClick={handleAddToOrder}
               className="px-4 py-2 bg-green-600/20 text-green-500 hover:bg-green-600/30 transition-colors rounded-md flex-1"
@@ -182,7 +207,7 @@ export default function Home() {
                   fill="currentColor"
                 />
               </svg>
-              UNDO
+              UNDO LAST
             </button>
           </div>
         </div>
@@ -191,6 +216,8 @@ export default function Home() {
             products={orderProducts}
             onRemoveProduct={handleRemoveProduct}
             onNewOrder={handleNewOrder}
+            currentTime={currentTime}
+            onQuantityChange={handleQuantityChange}
           />
         </div>
       </div>

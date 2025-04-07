@@ -43,7 +43,7 @@ To set up the system on your local machine:
    ```
 
 ## Usage
-1. Search for products by name or scan a barcode.
+1. Search for products by name or scan a barcode
 2. Adjust the quantity as needed.
 3. Review the total amount displayed on the screen.
 4. Click **Pay Using Card** to complete the transaction.

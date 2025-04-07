@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import Toast from "./Toast";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -6,6 +7,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [isFocused, setIsFocused] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   return (
     <div className="flex items-center gap-4 w-full">
@@ -26,8 +28,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
       <button
         className="px-4 py-2 border border-[#595959]/45 text-[#595959] hover:border-white/50 hover:text-white transition-all duration-200 rounded-md hover:bg-white/5 active:bg-white/10"
         onClick={() => {
-          // TODO: Implement barcode scanning functionality
-          console.log("Scan barcode");
+          setShowToast(true);
         }}
       >
         <div className="flex items-center gap-4">
@@ -51,6 +52,11 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           SCAN BAR CODE
         </div>
       </button>
+      <Toast
+        message="Scanner not connected"
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 }
