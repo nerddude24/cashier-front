@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+'const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const { isColonToken } = require('typescript');
 
@@ -9,7 +9,8 @@ function createWindow () {
     icon: path.join(__dirname, 'public/icon_transparent.ico'),
     webPreferences: {
       nodeIntegration: false
-    }
+    },
+    fullscreen: true 
   });
 
   win.loadURL('http://localhost:3000'); 
