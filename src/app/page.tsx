@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import SearchBar from "@/components/UI/SearchBar";
 import ProductTable from "@/components/UI/ProductTable";
 import OrderSummary from "@/components/Order/OrderSummary";
-import { Product } from "@/types/Product";
+import type { Product } from "@/types/Product";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
