@@ -1,5 +1,5 @@
 import React from "react";
-import type { Product } from "@/types/Product";
+import type { Product } from "@/types/product";
 
 interface ProductTableProps {
 	products: Product[];
