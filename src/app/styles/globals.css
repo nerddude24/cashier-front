@@ -1,7 +1,0 @@
-@import "tailwindcss";
-
-.receipt-table{
-    position: relative;
-    left:-50px;
-    width: 120px;
-}
