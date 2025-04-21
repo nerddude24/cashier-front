@@ -16,6 +16,7 @@ interface OrderSummaryProps {
   onNewOrder?: () => void;
   currentTime: string;
   onQuantityChange?: (productId: number, newQuantity: number) => void;
+  onProductSelect?: (product: OrderProduct) => void;
 }
 
 export default function OrderSummary({

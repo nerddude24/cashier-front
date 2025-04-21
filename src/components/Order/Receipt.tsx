@@ -24,10 +24,9 @@ export default function Receipt({
 }: ReceiptProps) {
   const total = products.reduce((sum, product) => sum + product.coast, 0);
 
-
   return (
-    <div className="fixed inset-0 bg-black/20 flex items-center justify-center p-6 z-100">
-      <div className=" bg-[#1a1a1a] rounded-lg w-full max-w-2xl p-8">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-6 z-[100] animate-fade-in">
+      <div className="bg-[#1a1a1a] rounded-lg w-full max-w-2xl p-8 shadow-xl animate-slide-in">
         <div className="flex justify-between items-start">
           <div className="relative left-44 w-[220px] h-[140px]">
             <Image
@@ -79,9 +78,9 @@ export default function Receipt({
         <div className="flex justify-center gap-4 ">
           <button
             onClick={onClose}
-            className="px-4 py-2 border hover:bg-white/10 cursor-pointer transition-colors"
+            className="px-6 py-3 text-base font-medium border border-red-500 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-md shadow-lg transition-all duration-200 transform hover:scale-105"
           >
-            Close
+            Close Receipt
           </button>
         </div>
       </div>
