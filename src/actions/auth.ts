@@ -35,3 +35,30 @@ export function getRouteForRole(role: User["role"]) {
 			return "/super_dashboard";
 	}
 }
+
+export async function login(formData: FormData): Promise<{
+	error?: string;
+	token?: string;
+}> {
+	try {
+		const res = await fetch(`${API_URL}/login`, {
+			method: "POST",
+			body: formData,
+		});
+
+		if (!res.ok) {
+			if (res.status === 401) return { error: "Invalid Credentials" };
+
+			console.error(
+				`Login error, Code: ${res.status}, Message: ${res.statusText}`,
+			);
+			return { error: "Unknown error Occurred" };
+		}
+
+		const { token } = await res.json();
+		return { token };
+	} catch (err) {
+		console.error(`Login error: ${err}`);
+		return { error: "Unknown error Occurred" };
+	}
+}
