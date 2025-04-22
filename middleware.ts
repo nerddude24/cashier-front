@@ -1,7 +1,11 @@
-import { getUser } from "@/actions/auth";
+import { getRouteForRole, getUser } from "@/actions/auth";
 import { type NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_ROUTES = ["/cashier", "/manager_dashboard", "/super_dashboard"];
+const PROTECTED_ROUTES = [
+	"/cashier",
+	"/manager_dashboard",
+	"/super_dashboard",
+] as const;
 
 export default async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
@@ -29,7 +33,8 @@ export default async function middleware(request: NextRequest) {
 		if (token) {
 			const user = await getUser(token);
 			if (user) {
-				// Todo: redirect based on role
+				const nextRoute = getRouteForRole(user.role);
+				return NextResponse.redirect(new URL(nextRoute, request.url));
 			}
 
 			// else if token is invalid, delete it
