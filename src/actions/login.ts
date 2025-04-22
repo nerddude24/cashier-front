@@ -43,6 +43,8 @@ export default async function login(
 		});
 
 		if (!res.ok) {
+			console.log(await res.json());
+
 			if (res.status === 401)
 				return { errors: { name: ["Invalid Credentials"] } };
 
