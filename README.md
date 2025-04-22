@@ -25,16 +25,12 @@ To set up the system on your local machine:
 
 2. Install dependencies:
    ```sh
-   npm install
-   # or
-   yarn install
+   bun install
    ```
 
 3. Run the development server:
    ```sh
-   npm run dev
-   # or
-   yarn dev
+   bun dev
    ```
 
 4. Open the application in your browser at:
