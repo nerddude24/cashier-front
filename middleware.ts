@@ -7,7 +7,7 @@ const PROTECTED_ROUTES = [
 	"/super_dashboard",
 ] as const;
 
-export default async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 	const isLoginPage = pathname === "/";
 	const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
@@ -49,5 +49,5 @@ export default async function middleware(request: NextRequest) {
 
 // Specify which paths middleware should run on
 export const config = {
-	matcher: ["/", ...PROTECTED_ROUTES],
+	matcher: ["/", "/cashier", "/manager_dashboard", "/super_dashboard"],
 };
