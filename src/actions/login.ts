@@ -1,7 +1,9 @@
 "use server";
 
+import type { User } from "@/types/auth";
 import { API_URL } from "@/config";
 import { z } from "zod";
+import { cookies } from "next/headers";
 
 const schema = z.object({
 	name: z.string(),
@@ -16,6 +18,7 @@ type LoginActionState = {
 		cash_register_id?: string[];
 	};
 	token?: string;
+	role?: User["role"];
 };
 
 export default async function login(
@@ -59,8 +62,19 @@ export default async function login(
 			return { errors: { name: ["Unknown error occurred"] } };
 		}
 
-		const { token } = await res.json();
-		return { token };
+		const { token, role } = await res.json();
+
+		// Set the token in cookies
+		const cookieStore = await cookies();
+		cookieStore.set("token", token, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			maxAge: 60 * 60 * 24 * 1, // 1 day
+			path: "/",
+			sameSite: "strict",
+		});
+
+		return { token, role };
 	} catch (err) {
 		console.error(`Login error: ${err}`);
 		return { errors: { name: ["Unknown error occurred"] } };

@@ -1,4 +1,5 @@
-import { getRouteForRole, getUser } from "@/actions/auth";
+import { getUser } from "@/actions/auth";
+import { getRouteForRole } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
 
 const PROTECTED_ROUTES = [
@@ -13,6 +14,10 @@ export async function middleware(request: NextRequest) {
 	const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
 		pathname.startsWith(route),
 	);
+	console.log(pathname);
+
+	if (!isLoginPage && !isProtectedRoute) return NextResponse.next();
+
 	const token = request.cookies.get("token")?.value;
 
 	if (isProtectedRoute) {
@@ -49,5 +54,5 @@ export async function middleware(request: NextRequest) {
 
 // Specify which paths middleware should run on
 export const config = {
-	matcher: ["/", "/cashier", "/manager_dashboard", "/super_dashboard"],
+	matcher: ["/((?!_next|favicon.ico|.*\\..*).*)"],
 };

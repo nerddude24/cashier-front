@@ -3,7 +3,9 @@
 import login from "@/actions/login";
 import { Button } from "@/components/ui/button";
 import { FormItem } from "@/components/ui/form_item";
-import { useActionState } from "react";
+import { getRouteForRole } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 
 function SubmitButton() {
@@ -18,6 +20,13 @@ function SubmitButton() {
 
 export default function Page() {
 	const [state, loginAction] = useActionState(login, undefined);
+	const router = useRouter();
+
+	useEffect(() => {
+		if (!state?.token || !state?.role) return;
+
+		router.push(getRouteForRole(state.role));
+	}, [state?.token, state?.role, router]);
 
 	return (
 		<main className="min-h-screen w-screen flex flex-col items-center justify-center">

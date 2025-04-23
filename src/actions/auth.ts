@@ -24,14 +24,3 @@ export async function getUser(token: string): Promise<User | null> {
 		return null;
 	}
 }
-
-export function getRouteForRole(role: User["role"]) {
-	switch (role) {
-		case "cashier":
-			return "/cashier";
-		case "manager":
-			return "/manager_dashboard";
-		case "admin":
-			return "/super_dashboard";
-	}
-}
