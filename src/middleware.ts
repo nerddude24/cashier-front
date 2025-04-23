@@ -14,7 +14,6 @@ export async function middleware(request: NextRequest) {
 	const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
 		pathname.startsWith(route),
 	);
-	console.log(pathname);
 
 	if (!isLoginPage && !isProtectedRoute) return NextResponse.next();
 
@@ -52,7 +51,7 @@ export async function middleware(request: NextRequest) {
 	return NextResponse.next();
 }
 
-// Specify which paths middleware should run on
+// Run on all routes except for internal Next.js routes
 export const config = {
 	matcher: ["/((?!_next|favicon.ico|.*\\..*).*)"],
 };

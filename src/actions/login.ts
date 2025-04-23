@@ -17,7 +17,6 @@ type LoginActionState = {
 		password?: string[];
 		cash_register_id?: string[];
 	};
-	token?: string;
 	role?: User["role"];
 };
 
@@ -62,7 +61,8 @@ export default async function login(
 			return { errors: { name: ["Unknown error occurred"] } };
 		}
 
-		const { token, role } = await res.json();
+		const data = await res.json();
+		const { token, role } = data;
 
 		// Set the token in cookies
 		const cookieStore = await cookies();
@@ -74,7 +74,7 @@ export default async function login(
 			sameSite: "strict",
 		});
 
-		return { token, role };
+		return { role };
 	} catch (err) {
 		console.error(`Login error: ${err}`);
 		return { errors: { name: ["Unknown error occurred"] } };

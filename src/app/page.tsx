@@ -23,10 +23,10 @@ export default function Page() {
 	const router = useRouter();
 
 	useEffect(() => {
-		if (!state?.token || !state?.role) return;
+		if (!state?.role) return;
 
 		router.push(getRouteForRole(state.role));
-	}, [state?.token, state?.role, router]);
+	}, [state?.role, router]);
 
 	return (
 		<main className="min-h-screen w-screen flex flex-col items-center justify-center">
