@@ -17,8 +17,6 @@ export async function getUser(): Promise<User | null> {
 			},
 		});
 
-		console.log(res);
-
 		if (!res.ok) {
 			return null;
 		}
