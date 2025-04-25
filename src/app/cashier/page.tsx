@@ -6,6 +6,7 @@ import SearchBar from "@/components/ui/SearchBar";
 import ProductTable from "@/components/ui/ProductTable";
 import OrderSummary from "@/components/order/OrderSummary";
 import type { Product } from "@/types/product";
+import LogoutButton from "@/components/LogoutButton";
 
 function useUpdateTime(
 	setCurrentTime: React.Dispatch<React.SetStateAction<string>>,
@@ -34,78 +35,6 @@ export default function Home() {
 			setProducts([]);
 			return;
 		}
-		// simulating product search
-		const filteredProducts = [
-			{
-				id: 1,
-				name: "Bread",
-				barCode: "123456",
-				unitPrice: 10,
-				quantity: 1,
-				coast: 10 * 1,
-			},
-			{
-				id: 2,
-				name: "chicken",
-				barCode: "789012",
-				unitPrice: 20,
-				quantity: 2,
-				coast: 20 * 2,
-			},
-			{
-				id: 3,
-				name: "thon rickamar",
-				barCode: "345678",
-				unitPrice: 15,
-				quantity: 1,
-				coast: 15 * 1,
-			},
-			{
-				id: 4,
-				name: "coffee",
-				barCode: "345678",
-				unitPrice: 15,
-				quantity: 1,
-				coast: 15 * 1,
-			},
-			{
-				id: 5,
-				name: "tea",
-				barCode: "345678",
-				unitPrice: 15,
-				quantity: 1,
-				coast: 15 * 1,
-			},
-			{
-				id: 6,
-				name: "Qantara water 5l",
-				barCode: "345678",
-				unitPrice: 15,
-				quantity: 1,
-				coast: 15 * 1,
-			},
-			{
-				id: 7,
-				name: "Guedila water 2l",
-				barCode: "345678",
-				unitPrice: 15,
-				quantity: 1,
-				coast: 15 * 1,
-			},
-			{
-				id: 8,
-				name: "Deglet Nour",
-				barCode: "789012",
-				unitPrice: 20,
-				quantity: 2,
-				coast: 20 * 2,
-			},
-		].filter(
-			(p) =>
-				p.name.toLowerCase().includes(query.toLowerCase()) ||
-				p.barCode.includes(query),
-		);
-		setProducts(filteredProducts);
 	};
 
 	const handleProductSelect = (product: Product) => {
@@ -169,13 +98,17 @@ export default function Home() {
 	return (
 		<div className="max-h-screen p-6 flex flex-col bg-[#0C0C0C]">
 			<div className="flex justify-between mb-6 items-start">
-				<Image
-					src="/ShoppingCenter.svg"
-					alt="ShoppingCenter Logo"
-					width={260}
-					height={160}
-					priority
-				/>
+				<div className="flex gap-2 items-center">
+					<Image
+						src="/ShoppingCenter.svg"
+						alt="ShoppingCenter Logo"
+						width={260}
+						height={160}
+						priority
+					/>
+					<LogoutButton />
+				</div>
+
 				<div className="text-right">
 					<div className="text-[#595959] text-sm">{currentTime}</div>
 				</div>

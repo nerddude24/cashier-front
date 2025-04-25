@@ -21,7 +21,7 @@ type LoginActionState = {
 };
 
 export default async function login(
-	_: any,
+	_: unknown,
 	formData: FormData,
 ): Promise<LoginActionState> {
 	const result = schema.safeParse(Object.fromEntries(formData));
@@ -43,15 +43,15 @@ export default async function login(
 				"Content-Type": "application/json",
 			},
 		});
+		const data = await res.json();
+		console.log(data);
 
 		if (!res.ok) {
-			console.log(await res.json());
-
 			if (res.status === 401)
 				return { errors: { name: ["Invalid Credentials"] } };
 
 			if (res.status === 400) {
-				const { errors } = await res.json();
+				const { errors } = data;
 				return { errors };
 			}
 
@@ -61,7 +61,6 @@ export default async function login(
 			return { errors: { name: ["Unknown error occurred"] } };
 		}
 
-		const data = await res.json();
 		const { token, role } = data;
 
 		// Set the token in cookies
