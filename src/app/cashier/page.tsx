@@ -7,6 +7,7 @@ import ProductTable from "@/components/ui/ProductTable";
 import OrderSummary from "@/components/order/OrderSummary";
 import type { Product } from "@/types/product";
 import LogoutButton from "@/components/LogoutButton";
+import { useAuthStore } from "@/stores/auth";
 
 function useUpdateTime(
 	setCurrentTime: React.Dispatch<React.SetStateAction<string>>,
@@ -23,6 +24,7 @@ function useUpdateTime(
 }
 
 export default function Home() {
+	const isLoadingUser = useAuthStore((state) => state.isLoading);
 	const [products, setProducts] = useState<Product[]>([]);
 	const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 	const [orderProducts, setOrderProducts] = useState<Product[]>([]);
@@ -94,6 +96,8 @@ export default function Home() {
 			}),
 		);
 	};
+
+	if (isLoadingUser) return <div>Loading...</div>;
 
 	return (
 		<div className="max-h-screen p-6 flex flex-col bg-[#0C0C0C]">

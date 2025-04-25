@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
 		if (!token) return NextResponse.redirect(new URL("/", request.url));
 
 		// there is a token, check if it is valid
-		const user = await getUser(token);
+		const user = await getUser();
 		if (!user) {
 			const res = NextResponse.redirect(new URL("/", request.url));
 			res.cookies.delete("token");
@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
 
 	if (isLoginPage) {
 		if (token) {
-			const user = await getUser(token);
+			const user = await getUser();
 			if (user) {
 				const nextRoute = getRouteForRole(user.role);
 				return NextResponse.redirect(new URL(nextRoute, request.url));

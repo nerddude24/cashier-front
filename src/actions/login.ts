@@ -47,8 +47,7 @@ export default async function login(
 		console.log(data);
 
 		if (!res.ok) {
-			if (res.status === 401)
-				return { errors: { name: ["Invalid Credentials"] } };
+			if (res.status === 401) return { errors: { name: data.error } };
 
 			if (res.status === 400) {
 				const { errors } = data;
