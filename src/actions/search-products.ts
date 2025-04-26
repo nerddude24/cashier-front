@@ -5,13 +5,13 @@ import type { Product } from "@/types/product";
 import { cookies } from "next/headers";
 
 export default async function searchProducts(
-	value: string,
+	query: string,
 ): Promise<Product[] | null> {
 	const token = (await cookies()).get("token")?.value;
 	if (!token) return null;
 
 	try {
-		const res = await fetch(`${API_URL}/search?q=${value}`, {
+		const res = await fetch(`${API_URL}/search?search=${query}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -24,9 +24,8 @@ export default async function searchProducts(
 			return null;
 		}
 
-		const data = await res.json();
-		console.log(data);
-		return null;
+		const { products } = await res.json();
+		return products as Product[];
 	} catch (error) {
 		console.error(error);
 		return null;

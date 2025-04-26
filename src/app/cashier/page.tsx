@@ -8,6 +8,7 @@ import OrderSummary from "@/components/order/OrderSummary";
 import type { OrderProduct, Product } from "@/types/product";
 import LogoutButton from "@/components/LogoutButton";
 import { useAuthStore } from "@/stores/auth";
+import searchProducts from "@/actions/search-products";
 
 function useUpdateTime(
 	setCurrentTime: React.Dispatch<React.SetStateAction<string>>,
@@ -32,18 +33,33 @@ export default function Home() {
 
 	useUpdateTime(setCurrentTime);
 
-	const handleSearch = (query: string) => {
-		if (!query.trim()) return;
+	const handleSearch = async (query: string) => {
+		if (!query.trim()) {
+			setSearchedProducts([]);
+			return;
+		}
+
+		const products = await searchProducts(query);
+		if (!products) return;
+
+		setSearchedProducts(products);
 	};
 
 	const handleProductSelect = (product: OrderProduct) => {
+		if (selectedProducts.find((p) => p.product.id === product.product.id))
+			return;
+
 		setSelectedProducts([...selectedProducts, product]);
 	};
 
 	const handleProductDeselect = (productId: number) => {
-		const deselectedProduct = selectedProducts.find((p) => p.product.id === productId);
+		const deselectedProduct = selectedProducts.find(
+			(p) => p.product.id === productId,
+		);
 		if (deselectedProduct) {
-			setSelectedProducts(selectedProducts.filter((p) => p.product.id !== productId));
+			setSelectedProducts(
+				selectedProducts.filter((p) => p.product.id !== productId),
+			);
 		}
 	};
 
@@ -138,6 +154,7 @@ export default function Home() {
 							onClick={handleUndo}
 							className="flex items-center justify-center gap-2 px-4 py-2 bg-yellow-600/20 text-yellow-500 hover:bg-yellow-600/30 transition-colors rounded-md flex-1"
 						>
+							{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
 							<svg
 								width="21"
 								height="16"
