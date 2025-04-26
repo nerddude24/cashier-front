@@ -1,14 +1,6 @@
 import React from "react";
 import Image from "next/image";
-
-interface OrderProduct {
-	id: number;
-	name: string;
-	barCode: string;
-	unitPrice: number;
-	quantity: number;
-	coast: number;
-}
+import type { OrderProduct } from "@/types/product";
 
 interface ReceiptProps {
 	products: OrderProduct[];
@@ -43,25 +35,23 @@ export default function Receipt({
 				</div>
 
 				<div className="mb-6">
-					<div className="grid grid-cols-6 p-2 bg-[#232323] text-sm mb-2 text-left items-center gap-2 font-semibold">
+					<div className="grid grid-cols-5 p-2 bg-[#232323] text-sm mb-2 text-left items-center gap-2 font-semibold">
 						<div>N</div>
 						<div>PRODUCT NAME</div>
-						<div>BAR CODE</div>
 						<div>UNIT PRICE</div>
 						<div>QUANTITY</div>
 						<div>TOTAL</div>
 					</div>
-					{products.map((product, index) => (
+					{products.map((p, index) => (
 						<div
-							key={product.id}
-							className="grid grid-cols-6 px-2 gap-2 text-sm mb-1 py-1 border-b"
+							key={p.product.id}
+							className="grid grid-cols-5 px-2 gap-2 text-sm mb-1 py-1 border-b"
 						>
 							<div>{index + 1}</div>
-							<div className="receipt-table">{product.name}</div>
-							<div>{product.barCode}</div>
-							<div>${product.unitPrice.toFixed(2)}</div>
-							<div>{product.quantity}</div>
-							<div>${product.coast.toFixed(2)}</div>
+							<div className="receipt-table">{p.product.name}</div>
+							<div>${p.product.price.toFixed(2)}</div>
+							<div>{p.quantity}</div>
+							<div>${p.coast.toFixed(2)}</div>
 						</div>
 					))}
 				</div>

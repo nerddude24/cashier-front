@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import SearchBar from "@/components/ui/SearchBar";
 import ProductTable from "@/components/ui/ProductTable";
 import OrderSummary from "@/components/order/OrderSummary";
-import type { Product } from "@/types/product";
+import type { OrderProduct, Product } from "@/types/product";
 import LogoutButton from "@/components/LogoutButton";
 import { useAuthStore } from "@/stores/auth";
 
@@ -25,44 +25,42 @@ function useUpdateTime(
 
 export default function Home() {
 	const isLoadingUser = useAuthStore((state) => state.isLoading);
-	const [products, setProducts] = useState<Product[]>([]);
-	const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-	const [orderProducts, setOrderProducts] = useState<Product[]>([]);
+	const [selectedProducts, setSelectedProducts] = useState<OrderProduct[]>([]);
+	const [searchedProducts, setSearchedProducts] = useState<Product[]>([]);
+	const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
 	const [currentTime, setCurrentTime] = useState<string>("");
 
 	useUpdateTime(setCurrentTime);
 
 	const handleSearch = (query: string) => {
-		if (!query.trim()) {
-			setProducts([]);
-			return;
-		}
+		if (!query.trim()) return;
 	};
 
-	const handleProductSelect = (product: Product) => {
+	const handleProductSelect = (product: OrderProduct) => {
 		setSelectedProducts([...selectedProducts, product]);
-		setProducts(products.filter((p) => p.id !== product.id));
 	};
 
 	const handleProductDeselect = (productId: number) => {
-		const deselectedProduct = selectedProducts.find((p) => p.id === productId);
+		const deselectedProduct = selectedProducts.find((p) => p.product.id === productId);
 		if (deselectedProduct) {
-			setProducts([...products, deselectedProduct]);
-			setSelectedProducts(selectedProducts.filter((p) => p.id !== productId));
+			setSelectedProducts(selectedProducts.filter((p) => p.product.id !== productId));
 		}
 	};
 
 	const handleAddToOrder = () => {
 		if (selectedProducts.length === 0) return;
 		const newOrderProducts = [...orderProducts];
+		// biome-ignore lint/complexity/noForEach: <explanation>
 		selectedProducts.forEach((product) => {
-			const existingProduct = newOrderProducts.find((p) => p.id === product.id);
+			const existingProduct = newOrderProducts.find(
+				(p) => p.product.id === product.product.id,
+			);
 			if (existingProduct) {
 				existingProduct.quantity += 1;
 				existingProduct.coast =
-					existingProduct.quantity * existingProduct.unitPrice;
+					existingProduct.quantity * existingProduct.product.price;
 			} else {
-				newOrderProducts.push({ ...product });
+				newOrderProducts.push(product);
 			}
 		});
 		setOrderProducts(newOrderProducts);
@@ -70,7 +68,7 @@ export default function Home() {
 	};
 
 	const handleRemoveProduct = (id: number) => {
-		setOrderProducts(orderProducts.filter((product) => product.id !== id));
+		setOrderProducts(orderProducts.filter((p) => p.product.id !== id));
 	};
 
 	const handleUndo = () => {
@@ -84,15 +82,15 @@ export default function Home() {
 
 	const handleQuantityChange = (productId: number, newQuantity: number) => {
 		setOrderProducts(
-			orderProducts.map((product) => {
-				if (product.id === productId) {
+			orderProducts.map((p) => {
+				if (p.product.id === productId) {
 					return {
-						...product,
+						...p,
 						quantity: newQuantity,
-						coast: newQuantity * product.unitPrice,
+						coast: newQuantity * p.product.price,
 					};
 				}
-				return product;
+				return p;
 			}),
 		);
 	};
@@ -122,7 +120,7 @@ export default function Home() {
 				<div className="flex-1 flex flex-col gap-6">
 					<SearchBar onSearch={handleSearch} />
 					<ProductTable
-						products={products}
+						products={searchedProducts}
 						selectedProducts={selectedProducts}
 						onProductSelect={handleProductSelect}
 						onProductDeselect={handleProductDeselect}

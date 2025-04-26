@@ -1,10 +1,10 @@
 import React from "react";
-import type { Product } from "@/types/product";
+import type { OrderProduct, Product } from "@/types/product";
 
 interface ProductTableProps {
 	products: Product[];
-	selectedProducts: Product[];
-	onProductSelect: (product: Product) => void;
+	selectedProducts: OrderProduct[];
+	onProductSelect: (product: OrderProduct) => void;
 	onProductDeselect: (productId: number) => void;
 }
 
@@ -18,25 +18,19 @@ export default function ProductTable({
 		<div className="w-full font-mono flex flex-col gap-4">
 			<div className="flex-1">
 				<div className="text-[#595959] mb-2">Search Results</div>
-				<div className="grid grid-cols-5 gap-4 text-[#fff] mb-2 px-4 py-2 border-b border-[#595959]/20">
+				<div className="grid grid-cols-2 gap-4 text-[#fff] mb-2 px-4 py-2 border-b border-[#595959]/20">
 					<div className="font-semibold">PRODUCT NAME</div>
-					<div className="font-semibold">BAR CODE</div>
 					<div className="font-semibold">UNIT PRICE</div>
-					<div className="font-semibold">QUANTITY</div>
-					<div className="font-semibold">COAST</div>
 				</div>
 				<div className="space-y-1">
-					{products.map((product, index) => (
+					{products.map((p) => (
 						<div
-							key={product.name}
-							onClick={() => onProductSelect(product)}
-							className="grid grid-cols-5 gap-4 text-white px-4 py-2 hover:bg-white/5 transition-colors rounded cursor-pointer"
+							key={p.id}
+							onClick={() => onProductSelect({product: p, quantity: 1, coast: p.price})}
+							className="grid grid-cols-2 gap-4 text-white px-4 py-2 hover:bg-white/5 transition-colors rounded cursor-pointer"
 						>
-							<div className="truncate">{product.name}</div>
-							<div className="font-mono">{product.barCode}</div>
-							<div>${product.unitPrice.toFixed(2)}</div>
-							<div>{product.quantity}</div>
-							<div>${product.coast.toFixed(2)}</div>
+							<div className="truncate">{p.name}</div>
+							<div>${p.price.toFixed(2)}</div>
 						</div>
 					))}
 				</div>
@@ -51,22 +45,20 @@ export default function ProductTable({
 				<div className="text-[#595959] mb-2">Selected Products</div>
 				<div className="grid grid-cols-5 gap-4 text-[#fff] mb-2 px-4 py-2 border-b border-[#595959]/20">
 					<div className="font-semibold">PRODUCT NAME</div>
-					<div className="font-semibold">BAR CODE</div>
 					<div className="font-semibold">UNIT PRICE</div>
 					<div className="font-semibold">QUANTITY</div>
 					<div className="font-semibold">COAST</div>
 				</div>
 				<div className="space-y-1">
-					{selectedProducts.map((product, index) => (
+					{selectedProducts.map((p, index) => (
 						<div
-							key={product.name}
-							className="grid grid-cols-5 gap-4 text-white px-4 py-2 group relative"
+							key={p.product.id}
+							className="grid grid-cols-4 gap-4 text-white px-4 py-2 group relative"
 						>
-							<div className="truncate">{product.name}</div>
-							<div className="font-mono">{product.barCode}</div>
-							<div>${product.unitPrice.toFixed(2)}</div>
-							<div>{product.quantity}</div>
-							<div>${product.coast.toFixed(2)}</div>
+							<div className="truncate">{p.product.name}</div>
+							<div>${p.product.price.toFixed(2)}</div>
+							<div>{p.quantity}</div>
+							<div>${p.coast.toFixed(2)}</div>
 							<button
 								type="button"
 								onClick={() => onProductDeselect(index)}

@@ -1,8 +1,11 @@
-export interface Product {
+export type Product = {
 	id: number;
 	name: string;
-	barCode: string;
-	unitPrice: number;
+	price: number;
+};
+
+export type OrderProduct = {
+	product: Product;
 	quantity: number;
 	coast: number;
-}
+};
