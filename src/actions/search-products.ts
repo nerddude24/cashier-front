@@ -1,33 +1,48 @@
-"use server";
+"use client";
 
-import { API_URL } from "@/config";
 import type { Product } from "@/types/product";
-import { cookies } from "next/headers";
+
+const sampleProducts: Product[] = [
+  {
+    id: 1,
+    name: "chicken",
+    price: 9.99,
+  },
+  {
+    id: 2,
+    name: "tomatos",
+    price: 699.99,
+  },
+  {
+    id: 3,
+    name: "batata",
+    price: 129.99,
+  },
+  {
+    id: 4,
+    name: "djasser",
+    price: 999.99,
+  },
+  {
+    id: 5,
+    name: "produit w khlas",
+    price: 3.99,
+  },
+  {
+    id: 6,
+    name: "coffee",
+    price: 2.49,
+  },
+];
 
 export default async function searchProducts(
-	query: string,
-): Promise<Product[] | null> {
-	const token = (await cookies()).get("token")?.value;
-	if (!token) return null;
+  query: string
+): Promise<Product[]> {
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 200));
 
-	try {
-		const res = await fetch(`${API_URL}/search?search=${query}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		});
-
-		if (!res.ok) {
-			console.error(res.statusText);
-			return null;
-		}
-
-		const { products } = await res.json();
-		return products as Product[];
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
+  const normalizedQuery = query.toLowerCase();
+  return sampleProducts.filter((product) =>
+    product.name.toLowerCase().includes(normalizedQuery)
+  );
 }

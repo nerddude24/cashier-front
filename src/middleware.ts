@@ -19,16 +19,13 @@ export async function middleware(request: NextRequest) {
 
   const token = request.cookies.get("token")?.value;
 
-  // Development bypass - direct access to cashier route without authentication
   const isDev = process.env.NODE_ENV !== "production";
   if (isDev && pathname.startsWith("/cashier")) {
-    // Allow direct access to cashier in development mode
     return NextResponse.next();
   }
 
   if (isProtectedRoute) {
     if (!token) {
-      // For development, if trying to access cashier, create a mock token
       if (isDev && pathname.startsWith("/cashier")) {
         const response = NextResponse.next();
         response.cookies.set("token", "dev-mock-token", {
@@ -41,10 +38,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
-    // there is a token, check if it is valid
     const user = await getUser();
     if (!user) {
-      // For development, if trying to access cashier, use mock user
       if (isDev && pathname.startsWith("/cashier")) {
         return NextResponse.next();
       }
@@ -64,7 +59,6 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(nextRoute, request.url));
       }
 
-      // else if token is invalid, delete it
       const res = NextResponse.next();
       res.cookies.delete("token");
       return res;
@@ -74,7 +68,6 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Run on all routes except for internal Next.js routes
 export const config = {
   matcher: ["/((?!_next|favicon.ico|.*\\..*).*)"],
 };
