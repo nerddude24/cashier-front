@@ -2,11 +2,7 @@ import { getUser } from "@/actions/auth";
 import { getRouteForRole } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_ROUTES = [
-	"/cashier",
-	"/manager_dashboard",
-	"/super_dashboard",
-] as const;
+const PROTECTED_ROUTES = ["/cashier", "/manager_dashboard"] as const;
 
 export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;

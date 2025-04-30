@@ -12,7 +12,5 @@ export function getRouteForRole(role: User["role"]) {
 			return "/cashier";
 		case "manager":
 			return "/manager_dashboard";
-		case "admin":
-			return "/super_dashboard";
 	}
 }
