@@ -15,12 +15,14 @@ export default function StaffManagement({
 }: StaffManagementProps) {
 	const [machines, setMachines] = useState<Machine[]>([]);
 	const [employees, setEmployees] = useState<Employee[]>([]);
+	const [newEmployee, setNewEmployee] = useState<Partial<Employee>>({});
+	const [newMachine, setNewMachine] = useState<Partial<Machine>>({});
+
+	// UI States
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [showConfirmation, setShowConfirmation] = useState(false);
 	const [formType, setFormType] = useState<"machine" | "cashier">("cashier");
-	const [newEmployee, setNewEmployee] = useState<Partial<Employee>>({});
 	const [showPassword, setShowPassword] = useState(false);
-	const [newMachine, setNewMachine] = useState<Partial<Machine>>({});
 	const [showPasswordMap, setShowPasswordMap] = useState<
 		Record<number, boolean>
 	>({});
@@ -32,34 +34,30 @@ export default function StaffManagement({
 		}));
 	};
 
-	const handleAddItem = () => {
-		if (formType === "machine") {
-			const machine: Machine = {
-				id: Date.now(),
-			};
+	const handleAddMachine = () => {
+		const machine: Machine = {
+			id: Date.now(),
+		};
 
-			setMachines([...machines, machine]);
-			setShowConfirmation(false);
-		} else {
-			if (
-				!newEmployee.username ||
-				!newEmployee.email ||
-				!newEmployee.password
-			) {
-				alert("Please fill in all required fields");
-				return;
-			}
+		setMachines([...machines, machine]);
+		setShowConfirmation(false);
+	};
 
-			const employee: Cashier = {
-				id: Date.now(),
-				username: newEmployee.username!,
-				email: newEmployee.email!,
-				password: newEmployee.password!,
-			};
-
-			setEmployees([...employees, employee]);
-			if (onAddEmployee) onAddEmployee(employee);
+	const handleAddCashier = () => {
+		if (!newEmployee.username || !newEmployee.email || !newEmployee.password) {
+			alert("Please fill in all required fields");
+			return;
 		}
+
+		const employee: Cashier = {
+			id: Date.now(),
+			username: newEmployee.username,
+			email: newEmployee.email,
+			password: newEmployee.password,
+		};
+
+		setEmployees([...employees, employee]);
+		if (onAddEmployee) onAddEmployee(employee);
 
 		setShowAddForm(false);
 		setNewEmployee({});
@@ -81,6 +79,7 @@ export default function StaffManagement({
 				<h2 className="text-2xl font-semibold text-white">Staff Management</h2>
 				<div className="flex gap-4">
 					<button
+						type="button"
 						onClick={() => {
 							setFormType("cashier");
 							setShowAddForm(true);
@@ -103,6 +102,7 @@ export default function StaffManagement({
 					</button>
 
 					<button
+						type="button"
 						onClick={() => {
 							setFormType("machine");
 							setShowConfirmation(true);
@@ -136,13 +136,17 @@ export default function StaffManagement({
 						</p>
 						<div className="flex gap-4 justify-end">
 							<button
+								type="button"
 								onClick={() => setShowConfirmation(false)}
 								className="px-6 py-3 bg-red-600/20 text-red-500 hover:bg-red-600/30 transition-colors rounded-md"
 							>
 								Cancel
 							</button>
 							<button
-								onClick={handleAddItem}
+								type="button"
+								onClick={
+									formType === "machine" ? handleAddMachine : handleAddCashier
+								}
 								className="px-6 py-3 bg-green-600/20 text-green-500 hover:bg-green-600/30 transition-colors rounded-md"
 							>
 								Confirm
@@ -159,8 +163,11 @@ export default function StaffManagement({
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						{formType === "machine" ? (
 							<div className="flex flex-col gap-2">
-								<label className="text-[#A0A0A0] text-sm">Machine Number</label>
+								<label htmlFor="machineId" className="text-[#A0A0A0] text-sm">
+									Machine Number
+								</label>
 								<input
+									name="machineId"
 									type="number"
 									placeholder="Enter machine number"
 									className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
@@ -168,7 +175,7 @@ export default function StaffManagement({
 									onChange={(e) =>
 										setNewMachine({
 											...newMachine,
-											id: parseInt(e.target.value),
+											id: Number.parseInt(e.target.value),
 										})
 									}
 								/>
@@ -176,8 +183,11 @@ export default function StaffManagement({
 						) : (
 							<>
 								<div className="flex flex-col gap-2">
-									<label className="text-[#A0A0A0] text-sm">Username</label>
+									<label htmlFor="username" className="text-[#A0A0A0] text-sm">
+										Username
+									</label>
 									<input
+										name="username"
 										type="text"
 										placeholder="Enter username"
 										className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
@@ -192,10 +202,11 @@ export default function StaffManagement({
 								</div>
 
 								<div className="flex flex-col gap-2">
-									<label className="text-[#A0A0A0] text-sm">
+									<label htmlFor="email" className="text-[#A0A0A0] text-sm">
 										Email Address
 									</label>
 									<input
+										name="email"
 										type="email"
 										placeholder="Enter email address"
 										className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
@@ -206,9 +217,12 @@ export default function StaffManagement({
 									/>
 								</div>
 								<div className="flex flex-col gap-2">
-									<label className="text-[#A0A0A0] text-sm">Password</label>
+									<label htmlFor="password" className="text-[#A0A0A0] text-sm">
+										Password
+									</label>
 									<div className="relative">
 										<input
+											name="password"
 											type={showPassword ? "text" : "password"}
 											placeholder="Enter password"
 											className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors w-full"
@@ -260,7 +274,10 @@ export default function StaffManagement({
 					</div>
 					<div className="flex gap-4 mt-6">
 						<button
-							onClick={handleAddItem}
+							type="button"
+							onClick={
+								formType === "machine" ? handleAddMachine : handleAddCashier
+							}
 							className="px-6 py-3 bg-green-600/20 text-green-500 hover:bg-green-600/30 transition-colors rounded-md flex items-center gap-2"
 						>
 							<svg
@@ -278,6 +295,7 @@ export default function StaffManagement({
 							Save
 						</button>
 						<button
+							type="button"
 							onClick={() => {
 								setShowAddForm(false);
 								setNewEmployee({});
@@ -339,6 +357,7 @@ export default function StaffManagement({
 										</div>
 									</div>
 									<button
+										type="button"
 										onClick={() => handleRemoveItem(machine.id, "machine")}
 										className="text-red-500 hover:text-red-400 transition-colors flex items-center gap-1 text-sm"
 									>
@@ -390,6 +409,7 @@ export default function StaffManagement({
 											: "••••••••"}
 									</span>
 									<button
+										type="button"
 										onClick={() => togglePasswordVisibility(employee.id)}
 										className="text-[#A0A0A0] hover:text-white transition-colors"
 									>
