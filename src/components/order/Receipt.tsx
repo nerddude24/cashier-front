@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import type { OrderProduct } from "@/types/product";
+import type { ApiOrderProduct, OrderProduct } from "@/types/product";
+import confirmOrder from "@/actions/confirm-order";
 
 interface ReceiptProps {
 	products: OrderProduct[];
@@ -15,6 +16,19 @@ export default function Receipt({
 	onClose,
 }: ReceiptProps) {
 	const total = products.reduce((sum, product) => sum + product.coast, 0);
+
+	const handleConfirmOrder = async () => {
+		const apiOrderProducts: ApiOrderProduct[] = products.map((p) => ({
+			id: p.product.id,
+			name: p.product.name,
+			price: p.product.price,
+			quantity: p.quantity,
+			subtotal: p.coast,
+		}));
+
+		await confirmOrder(apiOrderProducts);
+		onClose();
+	};
 
 	return (
 		<div className="fixed inset-0 bg-black/20 flex items-center justify-center p-6 z-100">
@@ -68,10 +82,10 @@ export default function Receipt({
 				<div className="flex justify-center gap-4 ">
 					<button
 						type="button"
-						onClick={onClose}
+						onClick={handleConfirmOrder}
 						className="px-4 py-2 border hover:bg-white/10 cursor-pointer transition-colors"
 					>
-						Close
+						Confirm Order
 					</button>
 				</div>
 			</div>
