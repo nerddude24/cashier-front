@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import StaffManagement from "@/components/manager/StaffManagement";
-import type { Employee } from "@/types/entities";
 
 export default function Home() {
 	const [currentTime, setCurrentTime] = useState<string>("");
@@ -17,16 +16,6 @@ export default function Home() {
 		const timer = setInterval(updateTime, 1000);
 		return () => clearInterval(timer);
 	}, []);
-
-	const handleAddEmployee = (employee: Employee) => {
-		console.log("New employee added:", employee);
-		// Here you would typically make an API call to save the employee
-	};
-
-	const handleRemoveEmployee = (employeeId: number) => {
-		console.log("Employee removed:", employeeId);
-		// Here you would typically make an API call to remove the employee
-	};
 
 	return (
 		<>
@@ -46,10 +35,7 @@ export default function Home() {
 
 				<div className="flex-1 h-[calc(100vh-200px)]">
 					<div className="w-full max-w-6xl mx-auto">
-						<StaffManagement
-							onAddEmployee={handleAddEmployee}
-							onRemoveEmployee={handleRemoveEmployee}
-						/>
+						<StaffManagement />
 					</div>
 				</div>
 			</div>

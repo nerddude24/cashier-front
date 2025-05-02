@@ -3,16 +3,10 @@
 import React, { useState } from "react";
 import type { Employee, Machine, Cashier } from "@/types/entities";
 import ShiftManagement from "./ShiftManagement";
+import { addCashier } from "@/actions/add-cashier";
+import { addMachine } from "@/actions/add-machine";
 
-interface StaffManagementProps {
-	onAddEmployee?: (employee: Employee) => void;
-	onRemoveEmployee?: (employeeId: number) => void;
-}
-
-export default function StaffManagement({
-	onAddEmployee,
-	onRemoveEmployee,
-}: StaffManagementProps) {
+export default function StaffManagement() {
 	const [machines, setMachines] = useState<Machine[]>([]);
 	const [employees, setEmployees] = useState<Employee[]>([]);
 	const [newEmployee, setNewEmployee] = useState<Partial<Employee>>({});
@@ -34,16 +28,18 @@ export default function StaffManagement({
 		}));
 	};
 
-	const handleAddMachine = () => {
-		const machine: Machine = {
-			id: Date.now(),
-		};
+	const handleAddMachine = async () => {
+		const success = await addMachine();
+		if (!success) {
+			alert("Failed to add machine");
+			return;
+		}
 
-		setMachines([...machines, machine]);
 		setShowConfirmation(false);
+		window.location.reload();
 	};
 
-	const handleAddCashier = () => {
+	const handleAddCashier = async () => {
 		if (!newEmployee.username || !newEmployee.email || !newEmployee.password) {
 			alert("Please fill in all required fields");
 			return;
@@ -56,21 +52,19 @@ export default function StaffManagement({
 			password: newEmployee.password,
 		};
 
-		setEmployees([...employees, employee]);
-		if (onAddEmployee) onAddEmployee(employee);
+		const success = await addCashier(employee);
+		if (!success) {
+			alert("Failed to add cashier");
+			return;
+		}
 
 		setShowAddForm(false);
-		setNewEmployee({});
-		setNewMachine({});
+		window.location.reload();
 	};
 
 	const handleRemoveItem = (id: number, type: "machine" | "employee") => {
-		if (type === "machine") {
-			setMachines(machines.filter((machine) => machine.id !== id));
-		} else {
-			setEmployees(employees.filter((emp) => emp.id !== id));
-			if (onRemoveEmployee) onRemoveEmployee(id);
-		}
+		// TODO
+		window.location.reload();
 	};
 
 	return (

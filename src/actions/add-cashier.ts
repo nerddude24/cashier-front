@@ -1,0 +1,33 @@
+"use server";
+
+import { API_URL } from "@/config";
+import type { Cashier } from "@/types/entities";
+import { cookies } from "next/headers";
+
+export async function addCashier(newCashier: Cashier): Promise<boolean> {
+	const token = (await cookies()).get("token")?.value;
+	if (!token) return false;
+
+	try {
+		const res = await fetch(`${API_URL}/user/addCashier`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+			body: JSON.stringify(newCashier),
+		});
+
+		if (!res.ok) {
+			console.error(res.statusText);
+			console.error(await res.json());
+			return false;
+		}
+
+		console.log("Cashier added successfully");
+		return true;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+}
