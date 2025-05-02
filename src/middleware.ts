@@ -2,7 +2,7 @@ import { getUser } from "@/actions/auth";
 import { getRouteForRole } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_ROUTES = ["/cashier", "/manager_dashboard"] as const;
+const PROTECTED_ROUTES = ["/cashier", "/manager"] as const;
 
 export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
@@ -32,6 +32,7 @@ export async function middleware(request: NextRequest) {
 	if (isLoginPage) {
 		if (token) {
 			const user = await getUser();
+
 			if (user) {
 				const nextRoute = getRouteForRole(user.role);
 				return NextResponse.redirect(new URL(nextRoute, request.url));

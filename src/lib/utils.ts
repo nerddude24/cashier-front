@@ -11,6 +11,6 @@ export function getRouteForRole(role: User["role"]) {
 		case "cashier":
 			return "/cashier";
 		case "manager":
-			return "/manager_dashboard";
+			return "/manager";
 	}
 }

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import SearchBar from "@/components/ui/SearchBar";
 import ProductTable from "@/components/ui/ProductTable";
-import OrderSummary from "@/components/order/OrderSummary";
+import OrderSummary from "@/components/cashier/OrderSummary";
 import type { OrderProduct, Product } from "@/types/product";
 import LogoutButton from "@/components/LogoutButton";
 import { useAuthStore } from "@/stores/auth";

@@ -21,7 +21,7 @@ export async function getUser(): Promise<User | null> {
 			return null;
 		}
 
-		const user = (await res.json()) as User;
+		const { user }: { user: User } = await res.json();
 		return user;
 	} catch (err) {
 		console.error(err);
