@@ -1,16 +1,49 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Employee, Machine, Cashier } from "@/types/entities";
 import ShiftManagement from "./ShiftManagement";
-import { addCashier } from "@/actions/cashier";
-import { addMachine } from "@/actions/machine";
+import { addCashier, getCashiers, removeCashier } from "@/actions/cashier";
+import { addMachine, getMachines, removeMachine } from "@/actions/machine";
+import { s } from "motion/react-client";
+
+function useLoadData(
+	setEmployees: (employees: Employee[]) => void,
+	setMachines: (machines: Machine[]) => void,
+	setIsLoading: (isLoading: boolean) => void,
+	setIsError: (isError: boolean) => void,
+) {
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setIsLoading(true);
+				const employees = await getCashiers();
+				if (!employees) throw new Error("Failed to fetch employees");
+				setEmployees(employees);
+
+				const machines = await getMachines();
+				if (!machines) throw new Error("Failed to fetch machines");
+				setMachines(machines);
+			} catch (err) {
+				console.error(err);
+				setIsError(true);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchData();
+	}, [setEmployees, setMachines, setIsLoading, setIsError]);
+}
 
 export default function StaffManagement() {
+	// Data States
 	const [machines, setMachines] = useState<Machine[]>([]);
 	const [employees, setEmployees] = useState<Employee[]>([]);
 	const [newEmployee, setNewEmployee] = useState<Partial<Employee>>({});
 	const [newMachine, setNewMachine] = useState<Partial<Machine>>({});
+	const [isLoading, setIsLoading] = useState(true);
+	const [isError, setIsError] = useState(false);
 
 	// UI States
 	const [showAddForm, setShowAddForm] = useState(false);
@@ -21,6 +54,8 @@ export default function StaffManagement() {
 		Record<number, boolean>
 	>({});
 
+	useLoadData(setEmployees, setMachines, setIsLoading, setIsError);
+
 	const togglePasswordVisibility = (employeeId: number) => {
 		setShowPasswordMap((prev) => ({
 			...prev,
@@ -30,10 +65,7 @@ export default function StaffManagement() {
 
 	const handleAddMachine = async () => {
 		const success = await addMachine();
-		if (!success) {
-			alert("Failed to add machine");
-			return;
-		}
+		if (!success) alert("Failed to add machine");
 
 		setShowConfirmation(false);
 		window.location.reload();
@@ -53,24 +85,28 @@ export default function StaffManagement() {
 		};
 
 		const success = await addCashier(employee);
-		if (!success) {
-			alert("Failed to add cashier");
-			return;
-		}
+		if (!success) alert("Failed to add cashier");
 
 		setShowAddForm(false);
 		window.location.reload();
 	};
 
 	const handleRemoveMachine = (id: number) => {
-		// TODO
+		const success = removeMachine(id);
+		if (!success) alert("Failed to remove machine");
+
 		window.location.reload();
 	};
 
 	const handleRemoveCashier = (id: number) => {
-		// TODO
+		const success = removeCashier(id);
+		if (!success) alert("Failed to remove cashier");
+
 		window.location.reload();
 	};
+
+	if (isLoading) return <div>Loading...</div>;
+	if (isError) return <div>An error occurred. Please try again later.</div>;
 
 	return (
 		<div className="w-full h-full flex flex-col border border-[#595959]/45 p-6 rounded-lg shadow-lg bg-[#1A1A1A]">
@@ -439,6 +475,26 @@ export default function StaffManagement() {
 												/>
 											</svg>
 										)}
+									</button>
+								</div>
+								<div>
+									<button
+										onClick={() => handleRemoveCashier(employee.id)}
+										className="text-red-500 hover:text-red-400 transition-colors flex items-center gap-1 text-sm"
+									>
+										<svg
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+												fill="currentColor"
+											/>
+										</svg>
+										Remove
 									</button>
 								</div>
 							</div>

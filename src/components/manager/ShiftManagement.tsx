@@ -1,5 +1,6 @@
 "use client";
 
+import { getShifts } from "@/actions/shift";
 import type { Machine, Employee } from "@/types/entities";
 import type { Shift } from "@/types/shift";
 import React, { useState, useEffect } from "react";
@@ -8,39 +9,18 @@ interface ShiftManagementProps {
 	employees: Employee[];
 }
 
-export default function ShiftManagement({
-	machines,
-	employees,
-}: ShiftManagementProps) {
-	const [shifts, setShifts] = useState<Shift[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-
+function useLoadShifts(
+	setShifts: (shifts: Shift[]) => void,
+	setLoading: (loading: boolean) => void,
+	setError: (error: string | null) => void,
+) {
 	useEffect(() => {
-		// Simulated API call to fetch shifts
-		// Replace this with actual API call
 		const fetchShifts = async () => {
 			try {
 				setLoading(true);
-				// Simulated API response
-				const mockShifts: Shift[] = [
-					{
-						id: 1,
-						machineId: 1,
-						cashierId: 1,
-						startTime: "2024-01-01T09:00:00",
-						endTime: "2024-01-01T17:00:00",
-					},
-					{
-						id: 2,
-						machineId: 2,
-						cashierId: 2,
-						startTime: "2024-01-01T10:00:00",
-						endTime: "2024-01-01T18:00:00",
-					},
-				];
-
-				setShifts(mockShifts);
+				const shifts = await getShifts();
+				if (!shifts) throw new Error("Failed to fetch shifts");
+				setShifts(shifts);
 				setError(null);
 			} catch (err) {
 				setError(
@@ -54,7 +34,18 @@ export default function ShiftManagement({
 		};
 
 		fetchShifts();
-	}, []);
+	}, [setShifts, setLoading, setError]);
+}
+
+export default function ShiftManagement({
+	machines,
+	employees,
+}: ShiftManagementProps) {
+	const [shifts, setShifts] = useState<Shift[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	useLoadShifts(setShifts, setLoading, setError);
 
 	const getCashierName = (cashierId: number) => {
 		const cashier = employees.find((emp) => emp.id === cashierId);

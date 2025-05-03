@@ -2,7 +2,7 @@
 
 import { useLoadUser } from "@/hooks/auth";
 
-export default function CashierLayout({
+export default function DashboardLayout({
 	children,
 }: {
 	children: React.ReactNode;
