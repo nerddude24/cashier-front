@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import type { Employee, Machine, Cashier } from "@/types/entities";
 import ShiftManagement from "./ShiftManagement";
-import { addCashier } from "@/actions/add-cashier";
-import { addMachine } from "@/actions/add-machine";
+import { addCashier } from "@/actions/cashier";
+import { addMachine } from "@/actions/machine";
 
 export default function StaffManagement() {
 	const [machines, setMachines] = useState<Machine[]>([]);
@@ -62,7 +62,12 @@ export default function StaffManagement() {
 		window.location.reload();
 	};
 
-	const handleRemoveItem = (id: number, type: "machine" | "employee") => {
+	const handleRemoveMachine = (id: number) => {
+		// TODO
+		window.location.reload();
+	};
+
+	const handleRemoveCashier = (id: number) => {
 		// TODO
 		window.location.reload();
 	};
@@ -352,7 +357,7 @@ export default function StaffManagement() {
 									</div>
 									<button
 										type="button"
-										onClick={() => handleRemoveItem(machine.id, "machine")}
+										onClick={() => handleRemoveMachine(machine.id)}
 										className="text-red-500 hover:text-red-400 transition-colors flex items-center gap-1 text-sm"
 									>
 										<svg
