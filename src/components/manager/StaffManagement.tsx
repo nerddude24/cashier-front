@@ -72,14 +72,14 @@ export default function StaffManagement() {
 	};
 
 	const handleAddCashier = async () => {
-		if (!newEmployee.username || !newEmployee.email || !newEmployee.password) {
+		if (!newEmployee.name || !newEmployee.email || !newEmployee.password) {
 			alert("Please fill in all required fields");
 			return;
 		}
 
 		const employee: Cashier = {
 			id: Date.now(),
-			username: newEmployee.username,
+			name: newEmployee.name,
 			email: newEmployee.email,
 			password: newEmployee.password,
 		};
@@ -226,11 +226,11 @@ export default function StaffManagement() {
 										type="text"
 										placeholder="Enter username"
 										className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
-										value={newEmployee.username || ""}
+										value={newEmployee.name || ""}
 										onChange={(e) =>
 											setNewEmployee({
 												...newEmployee,
-												username: e.target.value,
+												name: e.target.value,
 											})
 										}
 									/>
@@ -435,7 +435,7 @@ export default function StaffManagement() {
 								key={employee.id}
 								className="grid grid-cols-4 items-center text-white text-sm mb-2 p-4 hover:bg-[#232323]/50 rounded-md border border-transparent hover:border-[#3A3A3A] transition-all"
 							>
-								<div className="font-medium">{employee.username}</div>
+								<div className="font-medium">{employee.name}</div>
 								<div>{employee.email}</div>
 								<div className="flex items-center gap-2">
 									<span>

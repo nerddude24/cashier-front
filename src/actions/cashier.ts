@@ -25,7 +25,7 @@ export async function getCashiers(): Promise<Cashier[] | null> {
 		}
 
 		const data = await res.json();
-		return data;
+		return data.Cashiers as Cashier[];
 	} catch (error) {
 		console.error(error);
 		return null;
@@ -41,6 +41,7 @@ export async function addCashier(newCashier: Cashier): Promise<boolean> {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 				Accept: "application/json",
 			},
 			body: JSON.stringify(newCashier),

@@ -9,7 +9,7 @@ export async function getMachines(): Promise<Machine[] | null> {
 	if (!token) return null;
 
 	try {
-		const res = await fetch(`${API_URL}/user/cacheRegisters`, {
+		const res = await fetch(`${API_URL}/user/cashRegisters`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -25,20 +25,19 @@ export async function getMachines(): Promise<Machine[] | null> {
 		}
 
 		const data = await res.json();
-		return data;
+		return data.cashRegisters as Machine[];
 	} catch (error) {
 		console.error(error);
 		return null;
 	}
 }
 
-
 export async function addMachine(): Promise<boolean> {
 	const token = (await cookies()).get("token")?.value;
 	if (!token) return false;
 
 	try {
-		const res = await fetch(`${API_URL}/user/addCacheRegister`, {
+		const res = await fetch(`${API_URL}/user/addCashRegister`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -66,7 +65,7 @@ export async function removeMachine(id: number): Promise<boolean> {
 	if (!token) return false;
 
 	try {
-		const res = await fetch(`${API_URL}/user/cacheRegisters/${id}`, {
+		const res = await fetch(`${API_URL}/user/cashRegisters/${id}`, {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
