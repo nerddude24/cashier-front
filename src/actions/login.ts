@@ -31,7 +31,16 @@ export default async function login(
 	}
 
 	const { name, password, cash_register_id } = result.data;
-	const body = cash_register_id
+	const body:
+		| {
+				name: string;
+				password: string;
+		  }
+		| {
+				name: string;
+				password: string;
+				cash_register_id: string;
+		  } = cash_register_id
 		? { name, password, cash_register_id }
 		: { name, password };
 
@@ -43,22 +52,17 @@ export default async function login(
 			},
 			body: JSON.stringify(body),
 		});
-		const data = await res.json();
 
 		if (!res.ok) {
-			if (res.status === 401) return { errors: { name: data.error } };
-
-			if (res.status === 400) {
-				const { errors } = data;
-				return { errors };
-			}
-
 			console.error(
 				`Login error, Code: ${res.status}, Message: ${res.statusText}`,
 			);
+			console.error(await res.json());
+
 			return { errors: { name: ["Unknown error occurred"] } };
 		}
 
+		const data = await res.json();
 		const { token, role } = data;
 
 		// Set the token in cookies
