@@ -1,7 +1,6 @@
 export interface Shift {
-	id: number;
-	machineId: number;
-	cashierId: number;
-	startTime: string;
-	endTime: string;
+	cash_register_id: string;
+	cashier_name: string;
+	start_at: string;
+	end_at: string | null;
 }

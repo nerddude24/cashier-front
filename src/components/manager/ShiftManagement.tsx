@@ -4,10 +4,6 @@ import { getShifts } from "@/actions/shift";
 import type { Machine, Employee } from "@/types/entities";
 import type { Shift } from "@/types/shift";
 import React, { useState, useEffect } from "react";
-interface ShiftManagementProps {
-	machines: Machine[];
-	employees: Employee[];
-}
 
 function useLoadShifts(
 	setShifts: (shifts: Shift[]) => void,
@@ -37,29 +33,12 @@ function useLoadShifts(
 	}, [setShifts, setLoading, setError]);
 }
 
-export default function ShiftManagement({
-	machines,
-	employees,
-}: ShiftManagementProps) {
+export default function ShiftManagement() {
 	const [shifts, setShifts] = useState<Shift[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
 	useLoadShifts(setShifts, setLoading, setError);
-
-	const getCashierName = (cashierId: number) => {
-		const cashier = employees.find((emp) => emp.id === cashierId);
-		return cashier?.name || "Unknown";
-	};
-
-	const getMachineLabel = (machineId: number) => {
-		const machine = machines.find((m) => m.id === machineId);
-		return machine ? `Machine ${machine.id}` : "Unknown Machine";
-	};
-
-	const formatDateTime = (dateTimeStr: string) => {
-		return new Date(dateTimeStr).toLocaleString();
-	};
 
 	if (loading) {
 		return (
@@ -93,15 +72,13 @@ export default function ShiftManagement({
 			) : (
 				shifts.map((shift) => (
 					<div
-						key={shift.id}
+						key={shift.cash_register_id}
 						className="grid grid-cols-4 items-center text-white text-sm mb-2 p-4 hover:bg-[#232323]/50 rounded-md border border-transparent hover:border-[#3A3A3A] transition-all"
 					>
-						<div className="font-medium">
-							{getMachineLabel(shift.machineId)}
-						</div>
-						<div>{getCashierName(shift.cashierId)}</div>
-						<div>{formatDateTime(shift.startTime)}</div>
-						<div>{formatDateTime(shift.endTime)}</div>
+						<div className="font-medium">Machine {shift.cash_register_id}</div>
+						<div>{shift.cashier_name}</div>
+						<div>{shift.start_at}</div>
+						<div>{shift.end_at}</div>
 					</div>
 				))
 			)}
