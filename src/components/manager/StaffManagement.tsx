@@ -5,6 +5,7 @@ import type { Employee, Machine, Cashier } from "@/types/entities";
 import ShiftManagement from "./ShiftManagement";
 import { addCashier, getCashiers, removeCashier } from "@/actions/cashier";
 import { addMachine, getMachines, removeMachine } from "@/actions/machine";
+
 function useLoadData(
 	setEmployees: (employees: Employee[]) => void,
 	setMachines: (machines: Machine[]) => void,
