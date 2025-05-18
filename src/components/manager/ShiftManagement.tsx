@@ -49,7 +49,7 @@ export default function ShiftManagement({
 
 	const getCashierName = (cashierId: number) => {
 		const cashier = employees.find((emp) => emp.id === cashierId);
-		return cashier?.username || "Unknown";
+		return cashier?.name || "Unknown";
 	};
 
 	const getMachineLabel = (machineId: number) => {

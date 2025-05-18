@@ -38,13 +38,12 @@ export default async function login(
 	try {
 		const res = await fetch(`${API_URL}/login`, {
 			method: "POST",
-			body: JSON.stringify(body),
 			headers: {
 				"Content-Type": "application/json",
 			},
+			body: JSON.stringify(body),
 		});
 		const data = await res.json();
-		console.log(data);
 
 		if (!res.ok) {
 			if (res.status === 401) return { errors: { name: data.error } };

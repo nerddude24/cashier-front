@@ -5,8 +5,6 @@ import type { Employee, Machine, Cashier } from "@/types/entities";
 import ShiftManagement from "./ShiftManagement";
 import { addCashier, getCashiers, removeCashier } from "@/actions/cashier";
 import { addMachine, getMachines, removeMachine } from "@/actions/machine";
-import { s } from "motion/react-client";
-
 function useLoadData(
 	setEmployees: (employees: Employee[]) => void,
 	setMachines: (machines: Machine[]) => void,
@@ -91,15 +89,15 @@ export default function StaffManagement() {
 		window.location.reload();
 	};
 
-	const handleRemoveMachine = (id: number) => {
-		const success = removeMachine(id);
+	const handleRemoveMachine = async (id: number) => {
+		const success = await removeMachine(id);
 		if (!success) alert("Failed to remove machine");
 
 		window.location.reload();
 	};
 
-	const handleRemoveCashier = (id: number) => {
-		const success = removeCashier(id);
+	const handleRemoveCashier = async (id: number) => {
+		const success = await removeCashier(id);
 		if (!success) alert("Failed to remove cashier");
 
 		window.location.reload();
