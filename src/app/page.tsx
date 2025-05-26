@@ -29,12 +29,12 @@ export default function Page() {
 	}, [state?.role, router]);
 
 	return (
-		<main className="min-h-screen w-screen flex flex-col items-center justify-center">
+		<main className="min-h-screen flex flex-col items-center justify-center">
 			<form
 				action={loginAction}
-				className="flex flex-col items-stretch gap-4 border border-gray-500 rounded-md p-4"
+				className="flex flex-col w-full max-w-md gap-4 border border-gray-500 rounded-md p-10 "
 			>
-				<h1 className="text-4xl font-bold">Login</h1>
+				<h1 className="text-4xl text-center font-bold">Login</h1>
 
 				<FormItem name="name" label="Name" errors={state?.errors?.name} />
 				<FormItem
