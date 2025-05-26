@@ -52,6 +52,7 @@ export default function StaffManagement() {
 	const [showPasswordMap, setShowPasswordMap] = useState<
 		Record<number, boolean>
 	>({});
+	const [errorMessages, setErrorMessages] = useState<string[] | null>(null);
 
 	useLoadData(setEmployees, setMachines, setIsLoading, setIsError);
 
@@ -63,10 +64,14 @@ export default function StaffManagement() {
 	};
 
 	const handleAddMachine = async () => {
-		const success = await addMachine();
-		if (!success) alert("Failed to add machine");
-
 		setShowConfirmation(false);
+		const errors = await addMachine();
+
+		if (errors) {
+			alert(["Failed to add machine", ...errors].join("\n"));
+			return;
+		}
+
 		window.location.reload();
 	};
 
@@ -83,23 +88,33 @@ export default function StaffManagement() {
 			password: newEmployee.password,
 		};
 
-		const success = await addCashier(employee);
-		if (!success) alert("Failed to add cashier");
+		const errors = await addCashier(employee);
+		if (errors) {
+			setErrorMessages(errors);
+			return;
+		}
 
+		setErrorMessages(null);
 		setShowAddForm(false);
 		window.location.reload();
 	};
 
 	const handleRemoveMachine = async (id: number) => {
-		const success = await removeMachine(id);
-		if (!success) alert("Failed to remove machine");
+		const errors = await removeMachine(id);
+		if (errors) {
+			alert(["Failed to remove machine", ...errors].join("\n"));
+			return;
+		}
 
 		window.location.reload();
 	};
 
 	const handleRemoveCashier = async (id: number) => {
-		const success = await removeCashier(id);
-		if (!success) alert("Failed to remove cashier");
+		const errors = await removeCashier(id);
+		if (errors) {
+			alert(["Failed to remove cashier", ...errors].join("\n"));
+			return;
+		}
 
 		window.location.reload();
 	};
@@ -219,6 +234,13 @@ export default function StaffManagement() {
 						) : (
 							<>
 								<div className="flex flex-col gap-2">
+									<div className="flex flex-col gap-0.5">
+										{errorMessages?.map((error, index) => (
+											<p key={error} className="text-red-600 text-sm">
+												{index + 1}. {error}
+											</p>
+										))}
+									</div>
 									<label htmlFor="username" className="text-[#A0A0A0] text-sm">
 										Username
 									</label>
