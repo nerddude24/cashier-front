@@ -4,6 +4,7 @@ import type { User } from "@/types/auth";
 import { API_URL } from "@/config";
 import { z } from "zod";
 import { cookies } from "next/headers";
+import { extractStrings } from "@/lib/utils";
 
 const schema = z.object({
 	name: z.string(),
@@ -57,9 +58,9 @@ export default async function login(
 			console.error(
 				`Login error, Code: ${res.status}, Message: ${res.statusText}`,
 			);
-			console.error(await res.json());
+			const errors = await res.json();
 
-			return { errors: { name: ["Unknown error occurred"] } };
+			return { errors: { name: extractStrings(errors) } };
 		}
 
 		const data = await res.json();

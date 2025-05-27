@@ -74,10 +74,6 @@ export default function Receipt({
 					<div className=" text-lg">TOTAL</div>
 					<div className="text-4xl font-mono">${total.toFixed(2)}</div>
 				</div>
-				<h1 className="text-center text-l font-semibold mb-4">
-					<span className="text-red-500">IMPORTANT:</span> If you want to make a
-					return, please keep this receipt.
-				</h1>
 
 				<div className="flex justify-center gap-4 ">
 					<button
