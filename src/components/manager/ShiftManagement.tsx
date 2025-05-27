@@ -71,7 +71,7 @@ export default function ShiftManagement() {
 			) : (
 				shifts.map((shift) => (
 					<div
-						key={shift.cash_register_id}
+						key={`${shift.start_at}-${shift.cashier_name}`}
 						className="grid grid-cols-4 items-center text-white text-sm mb-2 p-4 hover:bg-[#232323]/50 rounded-md border border-transparent hover:border-[#3A3A3A] transition-all"
 					>
 						<div className="font-medium">Machine {shift.cash_register_id}</div>

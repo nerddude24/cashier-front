@@ -40,14 +40,12 @@ export default function StaffManagement() {
 	const [machines, setMachines] = useState<Machine[]>([]);
 	const [employees, setEmployees] = useState<Employee[]>([]);
 	const [newEmployee, setNewEmployee] = useState<Partial<Employee>>({});
-	const [newMachine, setNewMachine] = useState<Partial<Machine>>({});
 	const [isLoading, setIsLoading] = useState(true);
 	const [isError, setIsError] = useState(false);
 
 	// UI States
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [showConfirmation, setShowConfirmation] = useState(false);
-	const [formType, setFormType] = useState<"machine" | "cashier">("cashier");
 	const [showPassword, setShowPassword] = useState(false);
 	const [showPasswordMap, setShowPasswordMap] = useState<
 		Record<number, boolean>
@@ -129,10 +127,7 @@ export default function StaffManagement() {
 				<div className="flex gap-4">
 					<button
 						type="button"
-						onClick={() => {
-							setFormType("cashier");
-							setShowAddForm(true);
-						}}
+						onClick={() => setShowAddForm(true)}
 						className="px-4 py-2 bg-green-600/20 text-green-500 hover:bg-green-600/30 transition-colors rounded-md flex items-center gap-2"
 					>
 						{/* biome-ignore lint/a11y/noSvgWithoutTitle: */}
@@ -153,10 +148,7 @@ export default function StaffManagement() {
 
 					<button
 						type="button"
-						onClick={() => {
-							setFormType("machine");
-							setShowConfirmation(true);
-						}}
+						onClick={() => setShowConfirmation(true)}
 						className="px-4 py-2 bg-violet-600/20 text-violet-500 hover:bg-violet-600/30 transition-colors rounded-md flex items-center gap-2"
 					>
 						{/* biome-ignore lint/a11y/noSvgWithoutTitle: */}
@@ -195,9 +187,7 @@ export default function StaffManagement() {
 							</button>
 							<button
 								type="button"
-								onClick={
-									formType === "machine" ? handleAddMachine : handleAddCashier
-								}
+								onClick={handleAddMachine}
 								className="px-6 py-3 bg-green-600/20 text-green-500 hover:bg-green-600/30 transition-colors rounded-md"
 							>
 								Confirm
@@ -209,139 +199,114 @@ export default function StaffManagement() {
 			{showAddForm && (
 				<div className="mb-6 p-6 border border-[#595959]/45 rounded-lg bg-[#232323]/50 shadow-inner">
 					<h3 className="text-white text-xl mb-4 font-medium">
-						Add New {formType === "machine" ? "Machine" : "Cashier"}
+						Add New Cashier
 					</h3>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						{formType === "machine" ? (
-							<div className="flex flex-col gap-2">
-								<label htmlFor="machineId" className="text-[#A0A0A0] text-sm">
-									Machine Number
-								</label>
+						<div className="flex flex-col gap-2">
+							<div className="flex flex-col gap-0.5">
+								{errorMessages?.map((error, index) => (
+									<p key={error} className="text-red-600 text-sm">
+										{index + 1}. {error}
+									</p>
+								))}
+							</div>
+							<label htmlFor="username" className="text-[#A0A0A0] text-sm">
+								Username
+							</label>
+							<input
+								name="username"
+								type="text"
+								placeholder="Enter username"
+								className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
+								value={newEmployee.name || ""}
+								onChange={(e) =>
+									setNewEmployee({
+										...newEmployee,
+										name: e.target.value,
+									})
+								}
+							/>
+						</div>
+
+						<div className="flex flex-col gap-2">
+							<label htmlFor="email" className="text-[#A0A0A0] text-sm">
+								Email Address
+							</label>
+							<input
+								name="email"
+								type="email"
+								placeholder="Enter email address"
+								className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
+								value={newEmployee.email || ""}
+								onChange={(e) =>
+									setNewEmployee({ ...newEmployee, email: e.target.value })
+								}
+							/>
+						</div>
+						<div className="flex flex-col gap-2">
+							<label htmlFor="password" className="text-[#A0A0A0] text-sm">
+								Password
+							</label>
+							<div className="relative">
 								<input
-									name="machineId"
-									type="number"
-									placeholder="Enter machine number"
-									className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
-									value={newMachine.id || ""}
+									name="password"
+									type={showPassword ? "text" : "password"}
+									placeholder="Enter password"
+									className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors w-full"
+									value={newEmployee.password || ""}
 									onChange={(e) =>
-										setNewMachine({
-											...newMachine,
-											id: Number.parseInt(e.target.value),
+										setNewEmployee({
+											...newEmployee,
+											password: e.target.value,
 										})
 									}
 								/>
+								<button
+									type="button"
+									onClick={() => setShowPassword(!showPassword)}
+									className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A0A0A0] hover:text-white transition-colors"
+								>
+									{showPassword ? (
+										<>
+											{/* biome-ignore lint/a11y/noSvgWithoutTitle: */}
+											<svg
+												width="20"
+												height="20"
+												viewBox="0 0 24 24"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+													fill="currentColor"
+												/>
+											</svg>
+										</>
+									) : (
+										<>
+											{/* biome-ignore lint/a11y/noSvgWithoutTitle: */}
+											<svg
+												width="20"
+												height="20"
+												viewBox="0 0 24 24"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
+													fill="currentColor"
+												/>
+											</svg>
+										</>
+									)}
+								</button>
 							</div>
-						) : (
-							<>
-								<div className="flex flex-col gap-2">
-									<div className="flex flex-col gap-0.5">
-										{errorMessages?.map((error, index) => (
-											<p key={error} className="text-red-600 text-sm">
-												{index + 1}. {error}
-											</p>
-										))}
-									</div>
-									<label htmlFor="username" className="text-[#A0A0A0] text-sm">
-										Username
-									</label>
-									<input
-										name="username"
-										type="text"
-										placeholder="Enter username"
-										className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
-										value={newEmployee.name || ""}
-										onChange={(e) =>
-											setNewEmployee({
-												...newEmployee,
-												name: e.target.value,
-											})
-										}
-									/>
-								</div>
-
-								<div className="flex flex-col gap-2">
-									<label htmlFor="email" className="text-[#A0A0A0] text-sm">
-										Email Address
-									</label>
-									<input
-										name="email"
-										type="email"
-										placeholder="Enter email address"
-										className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors"
-										value={newEmployee.email || ""}
-										onChange={(e) =>
-											setNewEmployee({ ...newEmployee, email: e.target.value })
-										}
-									/>
-								</div>
-								<div className="flex flex-col gap-2">
-									<label htmlFor="password" className="text-[#A0A0A0] text-sm">
-										Password
-									</label>
-									<div className="relative">
-										<input
-											name="password"
-											type={showPassword ? "text" : "password"}
-											placeholder="Enter password"
-											className="bg-[#2A2A2A] text-white p-3 rounded-md border border-[#3A3A3A] focus:border-blue-500 focus:outline-none transition-colors w-full"
-											value={newEmployee.password || ""}
-											onChange={(e) =>
-												setNewEmployee({
-													...newEmployee,
-													password: e.target.value,
-												})
-											}
-										/>
-										<button
-											type="button"
-											onClick={() => setShowPassword(!showPassword)}
-											className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A0A0A0] hover:text-white transition-colors"
-										>
-											{showPassword ? (
-												<>
-													{/* biome-ignore lint/a11y/noSvgWithoutTitle: */}
-													<svg
-														width="20"
-														height="20"
-														viewBox="0 0 24 24"
-														fill="none"
-														xmlns="http://www.w3.org/2000/svg"
-													>
-														<path
-															d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-															fill="currentColor"
-														/>
-													</svg>
-												</>
-											) : (
-												<>
-													{/* biome-ignore lint/a11y/noSvgWithoutTitle: */}
-													<svg
-														width="20"
-														height="20"
-														viewBox="0 0 24 24"
-														fill="none"
-														xmlns="http://www.w3.org/2000/svg"
-													>
-														<path
-															d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
-															fill="currentColor"
-														/>
-													</svg>
-												</>
-											)}
-										</button>
-									</div>
-								</div>
-							</>
-						)}
+						</div>
 					</div>
 					<div className="flex gap-4 mt-6">
 						<button
 							type="button"
-							onClick={
-								formType === "machine" ? handleAddMachine : handleAddCashier
-							}
+							onClick={handleAddCashier}
 							className="px-6 py-3 bg-green-600/20 text-green-500 hover:bg-green-600/30 transition-colors rounded-md flex items-center gap-2"
 						>
 							{/* biome-ignore lint/a11y/noSvgWithoutTitle: */}
@@ -364,7 +329,6 @@ export default function StaffManagement() {
 							onClick={() => {
 								setShowAddForm(false);
 								setNewEmployee({});
-								setNewMachine({});
 							}}
 							className="px-6 py-3 bg-red-600/20 text-red-500 hover:bg-red-600/30 transition-colors rounded-md flex items-center gap-2"
 						>
