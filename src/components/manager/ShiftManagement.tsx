@@ -1,7 +1,6 @@
 "use client";
 
 import { getShifts } from "@/actions/shift";
-import type { Machine, Employee } from "@/types/entities";
 import type { Shift } from "@/types/shift";
 import React, { useState, useEffect } from "react";
 

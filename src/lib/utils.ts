@@ -18,8 +18,7 @@ export function getRouteForRole(role: User["role"]) {
 export function extractStrings(obj: unknown): string[] {
 	const result: string[] = [];
 
-	// biome-ignore lint/suspicious/noExplicitAny:
-	function recurse(value: any) {
+	function recurse(value: unknown) {
 		if (typeof value === "string") {
 			result.push(value);
 		} else if (Array.isArray(value)) {
@@ -27,9 +26,9 @@ export function extractStrings(obj: unknown): string[] {
 				recurse(item);
 			}
 		} else if (typeof value === "object" && value !== null) {
-			for (const key in value) {
+			for (const key in value as Record<string, unknown>) {
 				if (Object.prototype.hasOwnProperty.call(value, key)) {
-					recurse(value[key]);
+					recurse((value as Record<string, unknown>)[key]);
 				}
 			}
 		}
