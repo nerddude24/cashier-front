@@ -25,8 +25,6 @@ export async function getShifts(): Promise<Shift[] | null> {
 		}
 
 		const data = await res.json();
-		console.log(data);
-
 		return data.shifts as Shift[];
 	} catch (error) {
 		console.error(error);
