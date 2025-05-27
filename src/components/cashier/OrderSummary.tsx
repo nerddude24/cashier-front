@@ -5,7 +5,7 @@ import type { OrderProduct } from "@/types/product";
 interface OrderSummaryProps {
 	products: OrderProduct[];
 	onRemoveProduct: (id: number) => void;
-	onNewOrder?: () => void;
+	onNewOrder: () => void;
 	currentTime: string;
 	onQuantityChange?: (productId: number, newQuantity: number) => void;
 }
@@ -19,6 +19,12 @@ export default function OrderSummary({
 }: OrderSummaryProps) {
 	const total = products.reduce((sum, product) => sum + product.coast, 0);
 	const [showReceipt, setShowReceipt] = useState(false);
+
+	const handleConfirmOrder = () => {
+		setShowReceipt(false);
+
+		onNewOrder();
+	};
 
 	return (
 		<div className="w-full h-full flex flex-col border border-[#595959]/45 p-4 relative">
@@ -50,7 +56,7 @@ export default function OrderSummary({
 					<Receipt
 						products={products}
 						currentTime={currentTime}
-						onClose={() => setShowReceipt(false)}
+						onClose={handleConfirmOrder}
 						onQuantityChange={onQuantityChange}
 					/>
 				)}
