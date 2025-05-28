@@ -26,11 +26,13 @@ export default function ProductTable({
 					{products.map((p) => (
 						<div
 							key={p.id}
-							onClick={() => onProductSelect({product: p, quantity: 1, coast: p.price})}
+							onClick={() =>
+								onProductSelect({ product: p, quantity: 1, coast: p.price })
+							}
 							className="grid grid-cols-2 gap-4 text-white px-4 py-2 hover:bg-white/5 transition-colors rounded cursor-pointer"
 						>
 							<div className="truncate">{p.name}</div>
-							<div>${p.price.toFixed(2)}</div>
+							<div> DZD {p.price.toFixed(2)}</div>
 						</div>
 					))}
 				</div>
@@ -56,9 +58,9 @@ export default function ProductTable({
 							className="grid grid-cols-4 gap-4 text-white px-4 py-2 group relative"
 						>
 							<div className="truncate">{p.product.name}</div>
-							<div>${p.product.price.toFixed(2)}</div>
+							<div> DZD {p.product.price.toFixed(2)}</div>
 							<div>{p.quantity}</div>
-							<div>${p.coast.toFixed(2)}</div>
+							<div> DZD {p.coast.toFixed(2)}</div>
 							<button
 								type="button"
 								onClick={() => onProductDeselect(index)}

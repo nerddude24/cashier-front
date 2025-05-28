@@ -51,7 +51,7 @@ export default function Receipt({
 				<div className="mb-6">
 					<div className="grid grid-cols-5 p-2 bg-[#232323] text-sm mb-2 text-left items-center gap-2 font-semibold">
 						<div>N</div>
-						<div>PRODUCT NAME</div>
+						<div className="receipt-table">PRODUCT NAME</div>
 						<div>UNIT PRICE</div>
 						<div>QUANTITY</div>
 						<div>TOTAL</div>
@@ -63,16 +63,16 @@ export default function Receipt({
 						>
 							<div>{index + 1}</div>
 							<div className="receipt-table">{p.product.name}</div>
-							<div>${p.product.price.toFixed(2)}</div>
+							<div> DZD {p.product.price.toFixed(2)}</div>
 							<div>{p.quantity}</div>
-							<div>${p.coast.toFixed(2)}</div>
+							<div> DZD {p.coast.toFixed(2)}</div>
 						</div>
 					))}
 				</div>
 
 				<div className="flex justify-between items-baseline mb-8 pt-4">
 					<div className=" text-lg">TOTAL</div>
-					<div className="text-4xl font-mono">${total.toFixed(2)}</div>
+					<div className="text-4xl font-mono"> DZD {total.toFixed(2)}</div>
 				</div>
 
 				<div className="flex justify-center gap-4 ">
