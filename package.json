@@ -1,38 +1,102 @@
 {
-	"name": "cashier-front",
-	"version": "1.0.0",
-	"private": true,
-	"scripts": {
-		"dev": "next dev --turbopack",
-		"build": "next build",
-		"start": "next start",
-		"lint": "next lint"
-	},
-	"dependencies": {
-		"@radix-ui/react-slot": "^1.2.0",
-		"@tanstack/react-query": "^5.73.3",
-		"babel-plugin-react-compiler": "^19.1.0-rc.1",
-		"class-variance-authority": "^0.7.1",
-		"clsx": "^2.1.1",
-		"lucide-react": "^0.503.0",
-		"motion": "^12.4.7",
-		"next": "^15.3.2",
-		"react": "^19.1.0",
-		"react-dom": "^19.1.0",
-		"tailwind-merge": "^3.2.0",
-		"tw-animate-css": "^1.2.8",
-		"zod": "^3.24.3",
-		"zustand": "^5.0.3"
-	},
-	"devDependencies": {
-		"@eslint/eslintrc": "^3",
-		"@tailwindcss/postcss": "^4",
-		"@types/node": "^20",
-		"@types/react": "^19",
-		"@types/react-dom": "^19",
-		"eslint": "^9",
-		"eslint-config-next": "15.2.0",
-		"tailwindcss": "^4",
-		"typescript": "^5"
-	}
+  "name": "cashier-front",
+  "version": "1.0.0",
+  "private": true,
+  "main": "main.js",
+  "homepage": "./",
+  "description": "Supermarket management system",
+  "author": "copyright (c) 2025 DOMination team",
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.0",
+    "@tanstack/react-query": "^5.73.3",
+    "babel-plugin-react-compiler": "^19.1.0-rc.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "express": "^4.21.2",
+    "lucide-react": "^0.503.0",
+    "motion": "^12.4.7",
+    "next": "^15.3.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.2.0",
+    "tw-animate-css": "^1.2.8",
+    "zod": "^3.24.3",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "electron": "^29.0.0",
+    "electron-builder": "^26.0.12",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "electron:dev": "electron .",
+    "electron:build": "npm run build && electron-builder",
+    "dist": "npm run build && electron-builder --publish=never"
+  },
+  "build": {
+    "appId": "com.cashier.app",
+    "productName": "Supermarket App",
+    "asar": true,
+    "asarUnpack": [
+      ".next/**/*",
+      "public/**/*"
+    ],
+    "files": [
+      "main.js",
+      "preload.js",
+      ".next/**/*",
+      "public/**/*",
+      "pages/**/*",
+      "components/**/*",
+      "lib/**/*",
+      "styles/**/*",
+      "next.config.*",
+      "package.json",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/supermarketLogo.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "installerSidebar": "build\\sidebar.bmp",
+      "uninstallerSidebar": "build\\sidebar.bmp",
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "linux": {
+    "target": [
+      "AppImage",
+      "deb"
+    ],
+    "icon": "build/supermarketLogoFinal.png",
+    "category": "Utility",
+    "maintainer": "DOMination Team",
+    "synopsis": "Supermarket management system"
+  },
+  "mac": {
+    "target": [
+      "dmg",
+      "zip"
+    ],
+    "icon": "public/icon_transparent.icns"
+  }
 }
