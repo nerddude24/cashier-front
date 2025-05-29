@@ -50,4 +50,4 @@ To set up the system on your local machine:
 - **Next.js** – Frontend framework
 - **React.js** – UI components
 - **Tailwind CSS** – Styling
-👉 Check out desktop app (windows) demo: [your-domain.com](https://amin-halitim.itch.io/supermarket-app)
+👉 Check out desktop app (windows) demo: [Supermarket app](https://amin-halitim.itch.io/supermarket-app)
